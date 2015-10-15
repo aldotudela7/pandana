@@ -1,70 +1,25 @@
-#include <Python.h>
-#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
-#include <numpy/arrayobject.h>
-
 #include "accessibility.h"
 #include "graphalg.h"
+#include "pyaccesswrap.h"
 
 std::vector<std::shared_ptr<MTC::accessibility::Accessibility> > sas;
 
 
-static PyObject *
-create_graphs(PyObject *self, PyObject *args) {
-    int n;
-	if (!PyArg_ParseTuple(args, "i", &n)) return NULL;
+int create_graphs(int n) {
     for(int i=0;i<n;i++) {
         std::shared_ptr<MTC::accessibility::Accessibility>
             aptr(new MTC::accessibility::Accessibility);
         sas.push_back(aptr);
     }
-    return Py_None;
+    return 0;
 }
 
 
-static PyObject *
-create_graph(PyObject *self, PyObject *args)
+int create_graph(
+    int id, int numnodes, int * nodeids, double * nodexy,
+    int numedges, int numimpedances, int * edges, double * edgeweights,
+    int twoway)
 {
-    int id, twoway;
-	PyObject *input1, *input2, *input3, *input4;
-	// this is node ids, node xys, edge ids, and edge weights
-	if (!PyArg_ParseTuple(args, "iOOOOi", &id, &input1, &input2,
-											&input3, &input4, &twoway))
-											return NULL;
-
-	PyArrayObject *pyo;
-	pyo = (PyArrayObject*)PyArray_ContiguousFromObject(input1,
-														NPY_INT32, 1, 1);
-	if (pyo == NULL) return NULL;
-    int *nodeids = (int*)PyArray_DATA(pyo);
-    int numnodes = PyArray_DIMS(pyo)[0];
-
-	pyo = (PyArrayObject*)PyArray_ContiguousFromObject(input2,
-														NPY_FLOAT32, 2, 2);
-	if (pyo == NULL) return NULL;
-    float *nodexy = (float*)PyArray_DATA(pyo);
-    assert(numnodes == PyArray_DIMS(pyo)[0]);
-    assert(2 == PyArray_DIMS(pyo)[1]);
-
-	pyo = (PyArrayObject*)PyArray_ContiguousFromObject(input3,
-														NPY_INT32, 2, 2);
-	if (pyo == NULL) return NULL;
-    int *edges = (int*)PyArray_DATA(pyo);
-    int numedges = PyArray_DIMS(pyo)[0];
-    assert(2 == PyArray_DIMS(pyo)[1]);
-
-	pyo = (PyArrayObject*)PyArray_ContiguousFromObject(input4,
-														NPY_FLOAT32, 1, 2);
-	if (pyo == NULL) return NULL;
-    float *edgeweights = (float*)PyArray_DATA(pyo);
-    int numimpedances = 1;
-	if(PyArray_NDIM(pyo) == 1) assert(numedges == PyArray_DIMS(pyo)[0]);
-    else {
-        numimpedances = PyArray_DIMS(pyo)[0];
-		assert(numedges == PyArray_DIMS(pyo)[1]);
-	}
-
-    if(id>=sas.size()) return NULL;
-
     std::shared_ptr<MTC::accessibility::Accessibility> sa = sas[id];
 
     for(int i = 0 ; i < numimpedances ; i++) {
@@ -72,46 +27,28 @@ create_graph(PyObject *self, PyObject *args)
             ptr(new MTC::accessibility::Graphalg);
         sa->ga.push_back(ptr);
         sa->ga[i]->Build(nodeids, nodexy, numnodes, edges,
-            edgeweights+(numedges*i), numedges, twoway);
+            edgeweights + (numedges * i), numedges, twoway);
     }
 
     sa->numnodes = sa->ga[0]->numnodes;
 
-    Py_RETURN_NONE;
+    return 0;
 }
 
 
-static PyObject *
-initialize_pois(PyObject *self, PyObject *args)
+int initialize_pois(int nc, double md, int mi)
 {
-    int nc, mi;
-    double md;
-	if (!PyArg_ParseTuple(args, "idi", &nc, &md, &mi)) return NULL;
-
     std::shared_ptr<MTC::accessibility::Accessibility> sa = sas[0];
 
     sa->initializePOIs(nc,md,mi);
 
-    Py_RETURN_NONE;
+    return 0;
 }
 
 
-static PyObject *
-initialize_category(PyObject *self, PyObject *args)
+int initialize_category(int id, int numpois, double * pois)
 {
-    int id;
-	PyObject *input1;
-	if (!PyArg_ParseTuple(args, "iO", &id, &input1)) return NULL;
-
     std::shared_ptr<MTC::accessibility::Accessibility> sa = sas[0];
-
-    PyArrayObject *pyo;
-	pyo = (PyArrayObject*)PyArray_ContiguousFromObject(input1,
-														NPY_FLOAT32, 2, 2);
-	if (pyo == NULL) return NULL;
-    float *pois = (float*)PyArray_DATA(pyo);
-    int numpois = PyArray_DIMS(pyo)[0];
-    assert(2 == PyArray_DIMS(pyo)[1]);
 
     MTC::accessibility::accessibility_vars_t av;
     av.resize(sa->numnodes);
@@ -125,7 +62,7 @@ initialize_category(PyObject *self, PyObject *args)
 
     sa->initializeCategory(id,av);
 
-    Py_RETURN_NONE;
+    return 0;
 }
 
 
