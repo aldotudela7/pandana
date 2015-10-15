@@ -2,6 +2,8 @@ language: python
 sudo: false
 python:
 - '2.7'
+- '3.4'
+- '3.5'
 install:
 - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
     wget http://repo.continuum.io/miniconda/Miniconda-latest-Linux-x86_64.sh -O miniconda.sh;
@@ -15,7 +17,7 @@ install:
 - conda update -q conda
 - conda info -a
 - |
-  conda create -q -c synthicity -n test-environment python=$TRAVIS_PYTHON_VERSION basemap matplotlib numpy pandas pip pytables requests
+  conda create -q -c synthicity -n test-environment python=$TRAVIS_PYTHON_VERSION cffi basemap matplotlib numpy pandas pip pytables requests
 - source activate test-environment
 - pip install pytest-cov coveralls pep8
 - python setup.py install
