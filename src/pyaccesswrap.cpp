@@ -251,21 +251,6 @@ int get_all_model_results(
 }
 
 
-int compute_all_design_variables(
-    double radius, char * type, int gno, int num, double * nodes)
-{
-    std::shared_ptr<MTC::accessibility::Accessibility> sa = sas[gno];
-    std::string str(type);
-
-    #pragma omp parallel for
-    for(int i = 0 ; i < num ; i++) {
-    	nodes[i] = (double) sa->computeDesignVariable(i,radius,str);
-    }
-
-	return 0;
-}
-
-
 int precompute_range(double radius, int gno)
 {
     std::shared_ptr<MTC::accessibility::Accessibility> sa = sas[gno];

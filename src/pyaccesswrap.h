@@ -27,7 +27,5 @@ int get_all_model_results(
     double radius, int numvars, int * varindexes, float * varcoeffs, double distcoeff,
     double asc, double denom, double nestdenom, double mu, int graphno, int impno,
     int len, double * returnobj);
-int compute_all_design_variables(
-    double radius, char * type, int gno, int num, double * nodes);
 int precompute_range(double radius, int gno);
 double route_distance(int srcnode, int destnode, int gno, int impno);

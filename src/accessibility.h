@@ -76,11 +76,6 @@ namespace MTC {
 		        float *varcoeffs, float distcoeff, float asc, float denom,
 		        float nestdenom, float mu, int gno);
 
-			// compute a variable having to do with the street network
-			double computeDesignVariable(int srcnode, float radius,
-										 std::string type,
-										 int graphno=0);
-
 			void initializeAccVars(int numcategories);
             void initializeAccVar(int index, accessibility_vars_t &vars);
 
