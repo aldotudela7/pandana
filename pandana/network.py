@@ -506,8 +506,8 @@ class Network:
 
         xys = pd.DataFrame({'x': x_col, 'y': y_col}).dropna(how='any')
 
-        _pyaccess.initialize_category(self.poi_category_names.index(category),
-                                      xys.astype('float32'))
+        _pyaccess.initialize_category(
+            self.poi_category_names.index(category), xys)
 
     def nearest_pois(self, distance, category, num_pois=1, max_distance=None,
                      imp_name=None):
