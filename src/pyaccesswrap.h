@@ -4,7 +4,7 @@ int create_graph(
     int numedges, int numimpedances, int * edges, float * edgeweights,
     int twoway);
 int initialize_pois(int nc, double md, int mi);
-int initialize_category(int id, int numpois, float * pois);
+int initialize_category(int id, int numpois, double * pois);
 int find_all_nearest_pois(
     double radius, int num, int varind, int gno, int impno, double * returnobj);
 int initialize_acc_vars(int gno, int nc);
