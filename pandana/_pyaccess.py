@@ -24,3 +24,7 @@ def create_graph(id, nodes, edges, impedance_names, twoway):
     lib.create_graph(
         id, numnodes, nodeids_ptr, nodexy_ptr, numedges, numimpedances,
         edges_ptr, edge_weights_ptr, twoway)
+
+
+def precompute_range(distance, graph_num):
+    lib.precompute_range(distance, graph_num)
