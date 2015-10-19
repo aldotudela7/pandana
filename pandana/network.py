@@ -118,15 +118,10 @@ class Network:
         self.node_idx = pd.Series(np.arange(len(nodes_df)),
                                   index=nodes_df.index)
 
-        edges = pd.concat([self._node_indexes(edges_df["from"]),
-                          self._node_indexes(edges_df["to"])], axis=1)
-
         _pyaccess.create_graph(self.graph_no,
-                               nodes_df.index.values.astype('int32'),
-                               nodes_df.as_matrix().astype('float32'),
-                               edges.as_matrix().astype('int32'),
-                               edges_df[edge_weights.columns].transpose()
-                                   .as_matrix().astype('float32'),
+                               nodes_df,
+                               edges_df,
+                               self.impedance_names,
                                twoway)
 
         self._twoway = twoway
