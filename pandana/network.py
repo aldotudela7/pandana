@@ -322,12 +322,8 @@ class Network:
                                             "has not yet been initialized"
         varnum = self.variable_names.index(name)
 
-        res = _pyaccess.get_all_aggregate_accessibility_variables(distance,
-                                                                  varnum,
-                                                                  agg,
-                                                                  decay,
-                                                                  gno,
-                                                                  imp_num)
+        res = _pyaccess.get_all_aggregate_accessibility_variables(
+            distance, varnum, agg, decay, gno, imp_num, len(self.nodes_df))
 
         return pd.Series(res, index=self.node_ids)
 
@@ -362,9 +358,7 @@ class Network:
         xys = pd.DataFrame({'x': x_col, 'y': y_col}).dropna(how='any')
 
         # no limit to the mapping distance
-        node_ids = _pyaccess.xy_to_node(xys.astype('float32'),
-                                        mapping_distance,
-                                        self.graph_no)
+        node_ids = _pyaccess.xy_to_node(xys, mapping_distance, self.graph_no)
 
         s = pd.Series(node_ids, index=xys.index)
         # -1 marks did not get mapped ids
@@ -563,7 +557,8 @@ class Network:
                                             self.poi_category_names.index(
                                                 category),
                                             self.graph_no,
-                                            imp_num)
+                                            imp_num,
+                                            len(self.node_ids))
 
         a[a == -1] = max_distance
         df = pd.DataFrame(a, index=self.node_ids)

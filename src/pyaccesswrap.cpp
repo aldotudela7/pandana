@@ -67,17 +67,18 @@ int initialize_category(int id, int numpois, double * pois)
 
 
 int find_all_nearest_pois(
-    double radius, int num, int varind, int gno, int impno, double * returnobj)
+    double radius, int num_pois, int varind, int gno,
+    int impno, double * returnobj)
 {
     std::shared_ptr<MTC::accessibility::Accessibility> sa = sas[gno];
 
     std::vector<std::vector<float> > nodes =
-        sa->findAllNearestPOIs(radius, num, varind, impno);
+        sa->findAllNearestPOIs(radius, num_pois, varind, impno);
     int size = nodes.size();
 
     for(int i = 0 ; i < size ; i++) {
-        for(int j = 0 ; j < num ; j++) {
-            returnobj[i * size + j] = (double) nodes[i][j];
+        for(int j = 0 ; j < num_pois ; j++) {
+            returnobj[i * num_pois + j] = (double) nodes[i][j];
         }
     }
 
