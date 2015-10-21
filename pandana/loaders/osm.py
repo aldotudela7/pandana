@@ -2,7 +2,7 @@
 Tools for creating Pandana networks from Open Street Map.
 
 """
-from itertools import islice, izip
+from itertools import islice
 
 import pandas as pd
 import requests
@@ -247,7 +247,7 @@ def node_pairs(nodes, ways, waynodes, two_way=True):
 
     """
     def pairwise(l):
-        return izip(islice(l, 0, len(l)), islice(l, 1, None))
+        return zip(islice(l, 0, len(l)), islice(l, 1, None))
     intersections = intersection_nodes(waynodes)
     waymap = waynodes.groupby(level=0, sort=False)
     pairs = []
