@@ -254,7 +254,8 @@ def node_pairs(nodes, ways, waynodes, two_way=True):
 
     for id, row in ways.iterrows():
         nodes_in_way = waymap.get_group(id).node_id.values
-        nodes_in_way = filter(lambda x: x in intersections, nodes_in_way)
+        nodes_in_way = tuple(
+            filter(lambda x: x in intersections, nodes_in_way))
 
         if len(nodes_in_way) < 2:
             # no nodes to connect in this way
